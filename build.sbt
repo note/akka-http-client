@@ -9,7 +9,7 @@ scalaVersion := "2.11.8"
 
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http" % "10.0.4+21-9fcd058a",
+  "com.typesafe.akka" %% "akka-http" % "10.0.4",
   "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.0.0-M3"
 )
 
