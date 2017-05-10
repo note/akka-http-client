@@ -1,10 +1,12 @@
 package net.michalsitko
 
+import java.net.InetSocketAddress
+
 import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http.HostConnectionPool
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
-import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings, ProxySettings}
+import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
@@ -21,7 +23,7 @@ object HostLevel extends AnyRef with ResultLogger {
 
     val source: Source[(HttpRequest, String), NotUsed] = Source(List("/")).map(path => (HttpRequest(uri = path), path))
 
-    val proxySettings = ProxySettings("localhost", 8888, List.empty)
+    val proxySettings = new InetSocketAddress("localhost", 8888)
     val transport = ClientTransport.proxy(None, proxySettings, ClientConnectionSettings(system))
 
     val connectionPoolSettings = ConnectionPoolSettings(system).withTransport(transport)

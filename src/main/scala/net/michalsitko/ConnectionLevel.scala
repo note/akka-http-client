@@ -1,8 +1,10 @@
 package net.michalsitko
 
+import java.net.InetSocketAddress
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpRequest
-import akka.http.scaladsl.settings.{ClientConnectionSettings, ProxySettings}
+import akka.http.scaladsl.settings.ClientConnectionSettings
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
@@ -14,7 +16,7 @@ object ConnectionLevel extends AnyRef with ResultLogger {
     implicit val materializer = ActorMaterializer()
     implicit val ec = system.dispatcher
 
-    val proxySettings = ProxySettings("localhost", 8888, List.empty)
+    val proxySettings = new InetSocketAddress("localhost", 8888)
     val transport = ClientTransport.proxy(None, proxySettings, ClientConnectionSettings(system))
 
     val connectionFlow =
