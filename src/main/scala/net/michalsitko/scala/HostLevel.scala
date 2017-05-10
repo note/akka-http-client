@@ -10,7 +10,7 @@ import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSett
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import net.michalsitko.scala.utils.ResultLogger
+import net.michalsitko.scala.utils.{Config, ResultLogger}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
@@ -23,12 +23,12 @@ object HostLevel extends AnyRef with ResultLogger {
 
     val source: Source[(HttpRequest, String), NotUsed] = Source(List("/")).map(path => (HttpRequest(uri = path), path))
 
-    val proxySettings = new InetSocketAddress("localhost", 8888)
+    val proxySettings = new InetSocketAddress(Config.proxyHost, Config.proxyPort)
     val transport = ClientTransport.proxy(None, proxySettings, ClientConnectionSettings(system))
 
     val connectionPoolSettings = ConnectionPoolSettings(system).withTransport(transport)
     val poolClientFlow: Flow[(HttpRequest, String), (Try[HttpResponse], String), HostConnectionPool] =
-      Http().cachedHostConnectionPool[String]("www.scala-lang.org", 80, connectionPoolSettings)
+      Http().cachedHostConnectionPoolHttps[String]("www.scala-lang.org", 443, Http().defaultClientHttpsContext, connectionPoolSettings)
 
     val result: Future[(Try[HttpResponse], String)] = source.via(poolClientFlow).runWith(Sink.head)
 

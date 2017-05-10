@@ -7,20 +7,17 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
-import net.michalsitko.scala.utils.ResultLogger
+import net.michalsitko.scala.utils.{Config, ResultLogger}
 
 import scala.concurrent.Future
 
-/**
-  * Created by michal on 10/05/17.
-  */
 object RequestLevel extends AnyRef with ResultLogger {
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
     implicit val ec = system.dispatcher
 
-    val proxySettings = new InetSocketAddress("localhost", 8888)
+    val proxySettings = new InetSocketAddress(Config.proxyHost, Config.proxyPort)
     val transport = ClientTransport.proxy(None, proxySettings, ClientConnectionSettings(system))
 //    val transport = ClientTransport.TCP(None, ClientConnectionSettings(system))
 
@@ -32,10 +29,10 @@ object RequestLevel extends AnyRef with ResultLogger {
     }
 
     val done = for {
-//      _ <- singleRequest("https://github.com/akka/akka")
-//      _ <- singleRequest("https://twitter.com")
+      _ <- singleRequest("https://github.com/akka/akka")
+      _ <- singleRequest("https://twitter.com")
       _ <- singleRequest("https://www.scala-lang.org/resources/css/prettify.css")
-//      _ <- singleRequest("https://www.scala-lang.org/xyzxyz")
+      _ <- singleRequest("https://www.scala-lang.org/xyzxyz")
     } yield ()
 
     done.andThen {

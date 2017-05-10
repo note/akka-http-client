@@ -8,7 +8,7 @@ import akka.http.scaladsl.settings.ClientConnectionSettings
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
-import net.michalsitko.scala.utils.ResultLogger
+import net.michalsitko.scala.utils.{Config, ResultLogger}
 
 object ConnectionLevel extends AnyRef with ResultLogger {
   def main(args: Array[String]): Unit = {
@@ -16,7 +16,7 @@ object ConnectionLevel extends AnyRef with ResultLogger {
     implicit val materializer = ActorMaterializer()
     implicit val ec = system.dispatcher
 
-    val proxySettings = new InetSocketAddress("localhost", 8888)
+    val proxySettings = new InetSocketAddress(Config.proxyHost, Config.proxyPort)
     val transport = ClientTransport.proxy(None, proxySettings, ClientConnectionSettings(system))
 
     val connectionFlow =
