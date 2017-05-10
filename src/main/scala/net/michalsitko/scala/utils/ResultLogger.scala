@@ -1,4 +1,4 @@
-package net.michalsitko.utils
+package net.michalsitko.scala.utils
 
 import akka.http.scaladsl.model.HttpResponse
 import akka.stream.Materializer

@@ -1,4 +1,4 @@
-package net.michalsitko
+package net.michalsitko.scala
 
 import java.net.InetSocketAddress
 
@@ -7,10 +7,13 @@ import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.settings.{ClientConnectionSettings, ConnectionPoolSettings}
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
-import net.michalsitko.utils.ResultLogger
+import net.michalsitko.scala.utils.ResultLogger
 
 import scala.concurrent.Future
 
+/**
+  * Created by michal on 10/05/17.
+  */
 object RequestLevel extends AnyRef with ResultLogger {
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem()
@@ -29,10 +32,10 @@ object RequestLevel extends AnyRef with ResultLogger {
     }
 
     val done = for {
-      _ <- singleRequest("https://github.com/akka/akka")
-      _ <- singleRequest("https://twitter.com")
+//      _ <- singleRequest("https://github.com/akka/akka")
+//      _ <- singleRequest("https://twitter.com")
       _ <- singleRequest("https://www.scala-lang.org/resources/css/prettify.css")
-      _ <- singleRequest("https://www.scala-lang.org/xyzxyz")
+//      _ <- singleRequest("https://www.scala-lang.org/xyzxyz")
     } yield ()
 
     done.andThen {

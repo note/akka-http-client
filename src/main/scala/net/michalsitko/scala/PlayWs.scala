@@ -1,9 +1,9 @@
-package net.michalsitko
+package net.michalsitko.scala
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import play.api.libs.ws._
-import play.api.libs.ws.ahc._
+import play.api.libs.ws.StandaloneWSClient
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
 import scala.concurrent.Future
 

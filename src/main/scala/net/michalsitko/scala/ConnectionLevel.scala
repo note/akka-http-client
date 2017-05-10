@@ -1,4 +1,4 @@
-package net.michalsitko
+package net.michalsitko.scala
 
 import java.net.InetSocketAddress
 
@@ -8,7 +8,7 @@ import akka.http.scaladsl.settings.ClientConnectionSettings
 import akka.http.scaladsl.{ClientTransport, Http}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Sink, Source}
-import net.michalsitko.utils.ResultLogger
+import net.michalsitko.scala.utils.ResultLogger
 
 object ConnectionLevel extends AnyRef with ResultLogger {
   def main(args: Array[String]): Unit = {
