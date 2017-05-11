@@ -15,12 +15,17 @@ import akka.stream.Materializer;
 import akka.stream.javadsl.Flow;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
+import net.michalsitko.scala.utils.Config;
 
 import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+/**
+ * IMPORTANT!
+ * Please mind that with current API this example does not work as we can't pass ConnectionPoolSettings to outgoingConnection
+ */
 class ConnectionLevelClient {
 
     private final ActorSystem system;
@@ -31,7 +36,7 @@ class ConnectionLevelClient {
         system = sys;
         materializer = mat;
 
-        InetSocketAddress addr = new InetSocketAddress("localhost", 8888);
+        InetSocketAddress addr = new InetSocketAddress(Config.proxyHost(), Config.proxyPort());
         ClientTransport clientTransport = ClientTransport.proxy(Optional.empty(), addr, ClientConnectionSettings.create(system));
         ConnectionPoolSettings settings = ConnectionPoolSettings.create(system).withTransport(clientTransport);
         // TODO: Cannot pass settings to outgoingConnection

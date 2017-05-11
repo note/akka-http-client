@@ -10,6 +10,7 @@ import akka.http.javadsl.settings.ClientConnectionSettings;
 import akka.http.javadsl.settings.ConnectionPoolSettings;
 import akka.stream.ActorMaterializer;
 import akka.stream.Materializer;
+import net.michalsitko.scala.utils.Config;
 
 import java.net.InetSocketAddress;
 import java.util.Optional;
@@ -38,7 +39,7 @@ class RequestLevelClient {
     private Uri uri = Uri.create("https://www.scala-lang.org/resources/css/prettify.css");
 
     public <U> CompletionStage<U> requestLevelFutureBased(Function<HttpResponse, CompletionStage<U>> responseHandler) {
-        InetSocketAddress addr = new InetSocketAddress("localhost", 8888);
+        InetSocketAddress addr = new InetSocketAddress(Config.proxyHost(), Config.proxyPort());
         ClientTransport clientTransport = ClientTransport.proxy(Optional.empty(), addr, ClientConnectionSettings.create(system));
         ConnectionPoolSettings settings = ConnectionPoolSettings.create(system).withTransport(clientTransport);
         return Http.get(system)
