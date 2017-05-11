@@ -1,10 +1,7 @@
 package net.michalsitko.java;
 
 import akka.actor.ActorSystem;
-import akka.http.javadsl.ClientTransport;
-import akka.http.javadsl.ConnectHttp;
-import akka.http.javadsl.Http;
-import akka.http.javadsl.OutgoingConnection;
+import akka.http.javadsl.*;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
 import akka.http.javadsl.model.Uri;
@@ -22,10 +19,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
-/**
- * IMPORTANT!
- * Please mind that with current API this example does not work as we can't pass ConnectionPoolSettings to outgoingConnection
- */
 class ConnectionLevelClient {
 
     private final ActorSystem system;
@@ -39,8 +32,8 @@ class ConnectionLevelClient {
         InetSocketAddress addr = new InetSocketAddress(Config.proxyHost(), Config.proxyPort());
         ClientTransport clientTransport = ClientTransport.proxy(Optional.empty(), addr, ClientConnectionSettings.create(system));
         ConnectionPoolSettings settings = ConnectionPoolSettings.create(system).withTransport(clientTransport);
-        // TODO: Cannot pass settings to outgoingConnection
-        connectionFlow = Http.get(system).outgoingConnection(ConnectHttp.toHost("www.scala-lang.org", 443));
+        ConnectHttp connectTo = new ConnectHttpsImpl("www.scala-lang.org", 443, Optional.empty());
+        connectionFlow = Http.get(system).outgoingConnectionUsingTransport(connectTo, clientTransport, ClientConnectionSettings.create(system), system.log());
     }
 
     public Materializer getMaterializer() {
